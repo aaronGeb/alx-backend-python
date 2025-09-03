@@ -21,5 +21,6 @@ def batch_processing(batch_size):
     while True:
         rows = cursor.fetchmany(batch_size)
         if not rows:
-            break
-        yield rows
+            return []
+        for row in rows:
+          yield row
