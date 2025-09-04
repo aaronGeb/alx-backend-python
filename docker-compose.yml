@@ -1,21 +1,35 @@
-version: "3.9"
 
 services:
   mysql:
     image: mysql:8.0
-    container_name: python-mysql-db
+    container_name: mysql-container
     restart: always
     env_file: 
       - .env
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "${MYSQL_PORT}:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - mynetwork
+  adminer:
+    image: adminer
+    container_name: adminer-container
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - 8081:8080
+    networks:
+      - mynetwork
 
 volumes:
   mysql_data:
+
+networks:
+  mynetwork:
+    driver: bridge
