@@ -58,7 +58,7 @@ def load_csv_to_db(csv_file, conn=None, cursor=None):
                     (row["name"], row["email"], row["age"]),
                 )
             except sqlite3.IntegrityError:
-                # Skip duplicate username/email if UNIQUE constraint fails
+                
                 pass
     print(f"Data loaded from {csv_file}")
 
@@ -76,6 +76,6 @@ if __name__ == "__main__":
 
     # Print out loaded users
     users = get_all_users()
-    print("\n📋 Users in database:")
+    print("\nUsers in database:")
     for u in users:
         print(u)
