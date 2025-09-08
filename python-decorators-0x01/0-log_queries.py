@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sqlite3
 import functools
-
+from datetime import datetime
 #### decorator to lof SQL queries
 def log_queries(func):
     @functools.wraps(func)
