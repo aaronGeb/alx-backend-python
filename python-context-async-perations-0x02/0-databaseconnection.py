@@ -2,6 +2,7 @@
 
 import sqlite3
 
+
 class DatabaseConnection:
     """A simple database connection context manager."""
 
@@ -13,22 +14,22 @@ class DatabaseConnection:
     def __enter__(self):
         # open connection
         self.connection = sqlite3.connect(self.db_name)
-        self.cursor = self.conn.cursor()
-        print("Connection established.",self.db_name)
+        self.cursor = self.connection.cursor()
+        print("Connection established.", self.db_name)
         return self.cursor
 
     def __exit__(self, exc_type, exc_value, traceback):
         if self.connection:
-          self.connection.commit()
-          self.connection.close()
-          print("Connection closed.")
+            self.connection.commit()
+            self.connection.close()
+            print("Connection closed.")
         if exc_type:
             print(f"An error occurred: {exc_value}")
         return False  # Propagate exception if any
 
 
 if __name__ == "__main__":
-    db_name = "example.db"
+    db_name = "../python-decorators-0x01/test_users.db"
     with DatabaseConnection(db_name) as cursor:
         cursor.execute("SELECT * FROM users")
         rows = cursor.fetchall()
