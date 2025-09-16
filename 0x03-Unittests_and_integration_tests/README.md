@@ -73,7 +73,7 @@ Types of Tests
 
 - unittest.moc: [Mock object library](https://docs.python.org/3/library/unittest.mock.html)
 
-- parameterized:[parameterized](https://github.com/wolever/parameterized)
+- parameterized:[parameterized](https://github.com/wolever/parameterized) and [parameterized Doc](https://pypi.org/project/parameterized/)
 
 - Memoization in Python:[Memoization ](https://en.wikipedia.org/wiki/Memoization)
 
