@@ -47,19 +47,27 @@ GithubOrgClient.has_license: Confirm license filtering logic.
 
 Goal: Verify the function works if everything else works.
 
-🔹 Integration Tests
+### Integration Tests
 
-Validate a workflow end-to-end.
+- Validate a workflow end-to-end.
 
-Example:
+- Example:
 
-GithubOrgClient.public_repos: Ensures repository fetching and filtering works correctly.
+    - `GithubOrgClient.public_repos`: Ensures repository fetching and filtering works correctly.
 
-Uses fixtures (org_payload, repos_payload, etc.) instead of real API calls.
+    - Uses fixtures (`org_payload`, `repos_payload`) instead of real API calls.
 
-Only external requests (requests.get) are mocked.
+- Only external requests (requests.get) are mocked.
 
-Goal: Verify that all pieces of the system interact correctly.
+- Goal: Verify that all pieces of the system interact correctly.
+
+### Requirements
+- All files must be:
+- Follow pycodestyle 2.5
+  - Executable
+  - End with a new line
+  - Properly documented with full sentences
+  - Type-annotated
 
 ### Resources
 
