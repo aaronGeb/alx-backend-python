@@ -87,7 +87,6 @@ Example:
 ```
 $ python3 -m unittest test_utils.py
 $ python3 -m unittest test_client.py
-$ python3 -m unittest test_integration.py
 ```
 To run all tests at once:
 ```
