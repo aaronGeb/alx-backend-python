@@ -27,8 +27,8 @@ class TestGithubOrgClient(unittest.TestCase):
 
     @parameterized.expand(
         [
-            ("google", {"repos_url":
-             "https://api.github.com/orgs/google/repos"}),
+            ("google",
+                {"repos_url": "https://api.github.com/orgs/google/repos"}),
             ("abc", {"repos_url": "https://api.github.com/orgs/abc/repos"}),
         ]
     )
@@ -43,8 +43,8 @@ class TestGithubOrgClient(unittest.TestCase):
     @patch("client.get_json")
     def test_public_repos(self, mock_get_json):
         """Test that the public_repos method
-            returns the correct list of repo
-            names.
+        returns the correct list of repo
+        names.
         """
         org_name = "google"
         repos_payload = [
@@ -66,16 +66,15 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(client.public_repos(license="gpl"), [])
         self.assertEqual(mock_get_json.call_count, 2)
 
-    def test_has_license(self, repo, license_key, expected):
-        """Test that the has_license static method
-            returns the correct boolean value.
-        """
         @parameterized.expand(
-          [
-                ({"license": {"key": "my_license"}}, license_key="my_license"),
-                ({"license": {"key": "apache-2.0"}}, license_key="my_license")
-
-          ]
+            [
+                ({"license": {"key": "my_license"}}, "my_license", True),
+                ({"license": {"key": "apache-2.0"}}, "my_license", False),
+            ]
         )
-        client = GithubOrgClient("test_org")
-        self.assertEqual(client.has_license(repo, license_key), expected)
+        def test_has_license(self, repo, license_key, expected):
+            """Test that the has_license static method
+            returns the correct boolean value.
+            """
+            client = GithubOrgClient("google")
+            self.assertEqual(client.has_license(repo, license_key), expected)
