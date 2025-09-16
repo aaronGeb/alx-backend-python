@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Unittests for client module.
+"""
+Unittests for client module.
 """
 import unittest
 from unittest.mock import patch, Mock
@@ -7,7 +8,7 @@ from parameterized import parameterized
 from client import GithubOrgClient
 
 
-TestGithubOrgClient(unittest.TestCase):
+class TestGithubOrgClient(unittest.TestCase):
     """TestGithubOrgClient class to test GithubOrgClient class."""
 
     @parameterized.expand(
