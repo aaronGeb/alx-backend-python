@@ -39,9 +39,13 @@ class TestGithubOrgClient(unittest.TestCase):
         client = GithubOrgClient(org_name)
         self.assertEqual(client._public_repos_url, org_payload["repos_url"])
         mock_get_json.assert_called_once()
+
     @patch("client.get_json")
     def test_public_repos(self, mock_get_json):
-        """Test that the public_repos method returns the correct list of repo names."""
+        """Test that the public_repos method
+            returns the correct list of repo
+            names.
+        """
         org_name = "google"
         repos_payload = [
             {"name": "repo1", "license": {"key": "mit"}},
@@ -60,4 +64,4 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(client.public_repos(license="mit"), ["repo1"])
         self.assertEqual(client.public_repos(license="apache-2.0"), ["repo2"])
         self.assertEqual(client.public_repos(license="gpl"), [])
-        self.assertEqual(mock_get_json.call_count, 2) 
+        self.assertEqual(mock_get_json.call_count, 2)
