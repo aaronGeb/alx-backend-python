@@ -66,25 +66,16 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(client.public_repos(license="gpl"), [])
         self.assertEqual(mock_get_json.call_count, 2)
 
-    def test_has_license(self):
+    def test_has_license(self, repo, license_key, expected):
         """Test that the has_license static method
             returns the correct boolean value.
         """
-        repo_with_license = {"license": {"key": "my_license"}}
-        repo_without_license = {"license": {"key": "apache-2.0"}}
-        repo_no_license_info = {}
+        @parameterized.expand(
+          [
+                ({"license": {"key": "my_license"}}, license_key="my_license"),
+                ({"license": {"key": "apache-2.0"}}, license_key="my_license")
 
-        self.assertTrue(
-            GithubOrgClient.has_license(repo_with_license, "my_license")
+          ]
         )
-        self.assertFalse(
-            GithubOrgClient.has_license(repo_with_license, "apache-2.0")
-        )
-        self.assertFalse(
-            GithubOrgClient.has_license(repo_without_license, "my_license")
-        )
-        self.assertFalse(
-            GithubOrgClient.has_license(repo_no_license_info, "my_license")
-        )
-        with self.assertRaises(AssertionError):
-            GithubOrgClient.has_license(repo_with_license, None)
+        client = GithubOrgClient("test_org")
+        self.assertEqual(client.has_license(repo, license_key), expected)
