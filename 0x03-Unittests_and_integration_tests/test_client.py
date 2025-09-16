@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch, Mock, MagicMock
 from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
-from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
+from fixtures import TEST_PAYLOAD
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -83,10 +83,10 @@ class TestGithubOrgClient(unittest.TestCase):
 
 @parameterized_class([
   {
-    "org_payload": org_payload,
-    "repos_payload": repos_payload,
-    "expected_repos": expected_repos,
-    "apache2_repos": apache2_repos
+    "org_payload": TEST_PAYLOAD[0][0],
+    "repos_payload": TEST_PAYLOAD[0][1],
+    "expected_repos": TEST_PAYLOAD[0][2],
+    "apache2_repos": TEST_PAYLOAD[0][3],
   }
 ])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
@@ -94,22 +94,20 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Set up the class for integration tests."""
-        route_payload = {
-            "https://api.github.com/orgs/google": cls.org_payload,
-            "https://api.github.com/orgs/google/repos": cls.repos_payload,
-        }
-
-        def get_json_side_effect(url):
-            """Side effect function for get_json mock."""
-            return route_payload[url]
-
-        cls.get_patcher = patch("client.get_json", side_effect=get_json_side_effect)
-        cls.mock_get_json = cls.get_patcher.start()
-
+        cls.get_patcher = patch('requests.get', side_effect = cls.side_effect)
+        cls.mock_get = cls.get_patcher.start()
     @classmethod
     def tearDownClass(cls):
         """Tear down the class after integration tests."""
         cls.get_patcher.stop()
+    @classmethod
+    def side_effect(cls, url, *args, **kwargs):
+        """Side effect function for requests.get mock."""
+        if url == "https://api.github.com/orgs/google":
+            return Mock(status_code=200, json=MagicMock(return_value=cls.org_payload))
+        elif url == "https://api.github.com/orgs/google/repos":
+            return Mock(status_code=200, json=MagicMock(return_value=cls.repos_payload))
+        raise ValueError("Unmocked url: {}".format(url))
 
     def test_public_repos(self):
         """Test that the public_repos method
