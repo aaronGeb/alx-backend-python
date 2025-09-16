@@ -39,13 +39,11 @@ Types of Tests
 
 - Example:
 
-     - utils.get_json: Mock requests.get so no actual HTTP call is made.
+    - utils.get_json: Mock requests.get so no actual HTTP call is made.
+    - utils.memoize: Ensure repeated calls return cached values.
+    - GithubOrgClient.has_license: Confirm license filtering logic.
 
-utils.memoize: Ensure repeated calls return cached values.
-
-GithubOrgClient.has_license: Confirm license filtering logic.
-
-Goal: Verify the function works if everything else works.
+- Goal: Verify the function works if everything else works.
 
 ### Integration Tests
 
