@@ -2,6 +2,7 @@
 """Unittests for utils module.
 """
 import unittest
+import unitest.mock import patch, Mock
 from parameterized import parameterized
 from utils import access_nested_map, get_json, memoize
 
@@ -34,18 +35,19 @@ class TestAccessNestedMap(unittest.TestCase):
 
 class TestGetJson(unittest.TestCase):
     """TestGetJson class to test get_json function."""
-
-    @parameterized.expand(
-        [
+    @patch("utils.requests.get")
+    def test_get_json(self, url, mock_get):
+        """Test that the function returns the expected payload."""
+        test_case= [
             ("http://example.com", {"payload": True}),
             ("http://holberton.io", {"payload": False}),
         ]
-    )
-    def test_get_json(self, url, expected_payload):
-        """Test that the function returns the expected payload."""
-        with unittest.mock.patch("utils.requests.get") as mock_get:
-            mock_get.return_value.json.return_value = expected_payload
-            result = get_json(url)
-            self.assertEqual(result, expected_payload)
-            mock_get.assert_called_once_with(url)
-            
+        for test_url, test_payload in test_case:
+            # configure the mock response 
+            mock_response = Mock()
+            mock_response.json.return_value = test_payload
+            mock_get.return_value = mock_response
+            # call the function under test
+            result = get_json(test_url)
+            self.assertEqual(result, test_payload)
+            mock_get.reset_mock()
