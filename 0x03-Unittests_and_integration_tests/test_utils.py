@@ -46,12 +46,10 @@ class TestGetJson(unittest.TestCase):
     def test_get_json(self, test_url, test_payload, mock_get):
         """Test that the function returns the expected payload."""
       
-        with self.subTest(test_url=test_url, test_payload=test_payload):
-          # configure the mock response 
-          mock_response = Mock()
-          mock_response.json.return_value = test_payload
-          mock_get.return_value = mock_response
-          # call the function under test
-          result = get_json(test_url)
-          self.assertEqual(result, test_payload)
-          #mock_get.reset_mock()
+        mock_response = Mock()
+        mock_response.json.return_value = test_payload
+        mock_get.return_value = mock_response
+
+        result = get_json(test_url)
+        mock_get.assert_called_once_with(test_url)
+        self.assertEqual(result, test_payload)
