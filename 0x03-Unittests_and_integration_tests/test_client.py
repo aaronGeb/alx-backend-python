@@ -29,7 +29,7 @@ class TestGithubOrgClient(unittest.TestCase):
     @parameterized.expand(
         [
             ("google",
-                {"repos_url": "https://api.github.com/orgs/google/repos"}),
+             {"repos_url": "https://api.github.com/orgs/google/repos"}),
             ("abc", {"repos_url": "https://api.github.com/orgs/abc/repos"}),
         ]
     )
@@ -81,32 +81,40 @@ class TestGithubOrgClient(unittest.TestCase):
             self.assertEqual(client.has_license(repo, license_key), expected)
 
 
-@parameterized_class([
-  {
-    "org_payload": TEST_PAYLOAD[0][0],
-    "repos_payload": TEST_PAYLOAD[0][1],
-    "expected_repos": TEST_PAYLOAD[0][2],
-    "apache2_repos": TEST_PAYLOAD[0][3],
-  }
-])
+@parameterized_class(
+    [
+        {
+            "org_payload": TEST_PAYLOAD[0][0],
+            "repos_payload": TEST_PAYLOAD[0][1],
+            "expected_repos": TEST_PAYLOAD[0][2],
+            "apache2_repos": TEST_PAYLOAD[0][3],
+        }
+    ]
+)
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Integration test class to test GithubOrgClient.public_repos class."""
+
     @classmethod
     def setUpClass(cls):
         """Set up the class for integration tests."""
-        cls.get_patcher = patch('requests.get', side_effect = cls.side_effect)
+        cls.get_patcher = patch("requests.get", side_effect=cls.side_effect)
         cls.mock_get = cls.get_patcher.start()
+
     @classmethod
     def tearDownClass(cls):
         """Tear down the class after integration tests."""
         cls.get_patcher.stop()
+
     @classmethod
     def side_effect(cls, url, *args, **kwargs):
         """Side effect function for requests.get mock."""
         if url == "https://api.github.com/orgs/google":
-            return Mock(status_code=200, json=MagicMock(return_value=cls.org_payload))
+            return Mock(
+              status_code=200,
+              json=MagicMock(return_value=cls.org_payload))
         elif url == "https://api.github.com/orgs/google/repos":
-            return Mock(status_code=200, json=MagicMock(return_value=cls.repos_payload))
+            return Mock(status_code=200, json=MagicMock(
+              return_value=cls.repos_payload))
         raise ValueError("Unmocked url: {}".format(url))
 
     def test_public_repos(self):
@@ -121,4 +129,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         returns the expected list of repos with a specific license.
         """
         client = GithubOrgClient("google")
-        self.assertEqual(client.public_repos(license="apache-2.0"), self.apache2_repos)
+        self.assertEqual(
+            client.public_repos(license="apache-2.0"),
+            self.apache2_repos
+        )
