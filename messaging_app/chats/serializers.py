@@ -20,12 +20,12 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    sender = UserSerializer(read_only=True)
+    sender_name = serializers.SerializerMethodField()
     message_body = serializers.CharField()
 
     class Meta:
         model = Message
-        fields = ["message_id", "sender", "content", "is_read", "sent_at"]
+        fields = ["message_id", "sender", "sender_name", "message_body", "sent_at"]
         read_only_fields = ["message_id", "sender", "sent_at"]
 
     def validate_message_body(self, value):
@@ -44,13 +44,17 @@ class MessageSerializer(serializers.ModelSerializer):
 class ConversationSerializer(serializers.ModelSerializer):
     participants = UserSerializer(many=True, read_only=True)
     messages = MessageSerializer(many=True, read_only=True)
+    participant_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Conversation
-        fields = ["conversation_id", "participants_id", "messages", "created_at"]
+        fields = [
+            "conversation_id",
+            "participants",
+            "participant_count",
+            "messages",
+            "created_at",
+        ]
 
-    def get_participant_emails(self, obj):
-        return [participant.email for participant in obj.participants_id.all()]
-
-    def get_message_count(self, obj):
-        return obj.messages.count()
+    def get_participant_count(self, obj):
+        return obj.participants.count()
