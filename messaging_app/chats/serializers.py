@@ -30,4 +30,4 @@ class ChatSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Chat
-        fields = ["chat_id", "participants", "messages", "created_at"]
+        fields = ["conversation_id", "participants", "messages", "created_at"]
