@@ -1,73 +1,88 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
-from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 
 from .models import Conversation, Message, User
-from .serializers import ConversationSerializer, MessageSerializer, UserSerializer
-
-# Create your views here.
+from .serializers import ConversationSerializer, MessageSerializer
 
 
 class ConversationViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for listing and creating conversations.
+    """
+
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        """Return only conversations the user participants in."""
-        return self.queryset.filter(participants_id=self.request.user)
+        # Only conversations where the current user is a participant
+        return self.queryset.filter(participants=self.request.user)
 
     def create(self, request, *args, **kwargs):
-        """Create a new conversation with the requesting user as a participant."""
+        """
+        Create a new conversation. Payload:
+        {
+            "participants": ["uuid1", "uuid2", ...]
+        }
+        """
         participant_ids = request.data.get("participants", [])
-        if not participant_ids:
+        if not isinstance(participant_ids, list):
             return Response(
-                {"error": "At least one participant is required"},
+                {"detail": "participants must be a list of UUIDs"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
         conversation = Conversation.objects.create()
-        conversation.participants.add(request.user)  # add current user
-        users = User.objects.filter(user_id__in=participant_ids)
-        conversation.participants.add(*users)
+        conversation.participants.add(request.user)  # include current user
+        other_users = User.objects.filter(user_id__in=participant_ids)
+        conversation.participants.add(*other_users)
 
         serializer = self.get_serializer(conversation)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class MessageViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for listing and sending messages in a conversation.
+    """
+
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        """Return messages in conversations the user participates in."""
-        return self.queryset.filter(
-            conversation__participants_id=self.request.user
-        ).order_by("-sent_at")
+        """
+        Optionally filter messages by conversation_id query param:
+        GET /messages/?conversation=<uuid>
+        """
+        qs = self.queryset
+        conversation_id = self.request.query_params.get("conversation")
+        if conversation_id:
+            qs = qs.filter(conversation__conversation_id=conversation_id)
+        return qs.order_by("sent_at")
 
-    def perform_create(self, serializer):
-        """Set the sender to the requesting user."""
-        serializer.save(sender=self.request.user)
+    def create(self, request, *args, **kwargs):
+        """
+        Send a new message. Payload:
+        {
+            "conversation": "<conversation_uuid>",
+            "message_body": "Hello!"
+        }
+        """
+        serializer = MessageCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path="by-conversation/(?P<conversation_id>[^/.]+)",
-    )
-    def by_conversation(self, request, conversation_id=None):
-        """Get messages for a specific conversation."""
+        conversation_id = request.data.get("conversation")
         conversation = get_object_or_404(Conversation, conversation_id=conversation_id)
+
+        # check if user is a participant
         if request.user not in conversation.participants.all():
             return Response(
-                {"error": "You do not have access to this conversation."},
+                {"detail": "You are not a participant in this conversation"},
                 status=status.HTTP_403_FORBIDDEN,
             )
-        messages = self.get_queryset().filter(conversation=conversation)
-        page = self.paginate_queryset(messages)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
 
-        serializer = self.get_serializer(messages, many=True)
-        return Response(serializer.data)
+        message = serializer.save(sender=request.user, conversation=conversation)
+        out_serializer = MessageSerializer(message)
+        return Response(out_serializer.data, status=status.HTTP_201_CREATED)
