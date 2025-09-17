@@ -1,4 +1,4 @@
-from rest_framwork import serializers
+from rest_framework import serializers
 from .models import Conversation, Message, User
 
 

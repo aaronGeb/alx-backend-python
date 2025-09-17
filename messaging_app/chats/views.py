@@ -6,7 +6,6 @@ from .models import Conversation, Message, User
 from .serializers import (
     ConversationSerializer,
     MessageSerializer,
-    MessageCreateSerializer,
 )
 
 
