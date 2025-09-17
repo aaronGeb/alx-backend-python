@@ -42,6 +42,7 @@ def connect_to_prodev():
         port=int(os.getenv("MYSQL_PORT")),
     )
 
+
 def create_table(connection):
     """create users table"""
     cursor = connection.cursor()
@@ -62,6 +63,7 @@ def create_table(connection):
     finally:
         cursor.close()
 
+
 def insert_data(connection, data):
     """insert data into users table"""
     cursor = connection.cursor()
@@ -78,6 +80,7 @@ def insert_data(connection, data):
     finally:
         cursor.close()
 
+
 def load_csv_data(file_path):
     """load data from CSV file"""
     data = []
@@ -86,7 +89,6 @@ def load_csv_data(file_path):
         for row in reader:
             data.append((str(uuid.uuid4()), row["name"], row["email"], row["age"]))
     return data
-
 
 
 if __name__ == "__main__":

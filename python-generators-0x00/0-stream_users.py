@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 def stream_users():
     """Stream all users in the database"""
     db = mysql.connector.connect(
@@ -14,10 +15,8 @@ def stream_users():
         database=os.getenv("MYSQL_DATABASE"),
     )
     cursor = db.cursor()
-    cursor.execute("SELECT * FROM users")
+    cursor.execute("SELECT * FROM user_data")
     for row in cursor.fetchall():
         yield row
     cursor.close()
     db.close()
-
-

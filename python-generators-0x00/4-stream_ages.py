@@ -2,7 +2,6 @@
 
 from seed import connect_db
 
-
 def stream_user_ages():
     """Prints average  ages from the database."""
     with connect_db() as db:

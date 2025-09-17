@@ -14,6 +14,7 @@ def stream_users_in_batches(batch_size):
         for row in rows:
             yield row
 
+
 def batch_processing(batch_size):
     """Generator function to yield users in batches"""
     cursor = connect_db.cursor()
@@ -23,4 +24,4 @@ def batch_processing(batch_size):
         if not rows:
             return []
         for row in rows:
-          yield row
+            yield row
