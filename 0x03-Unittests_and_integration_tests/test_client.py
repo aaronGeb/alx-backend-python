@@ -76,11 +76,11 @@ class TestGithubOrgClient(unittest.TestCase):
             ]
         )
         def test_has_license(self, repo, license_key, expected):
-            """Test has_license static method returns boolean value"""
+            """Test has_license returns correct boolean based on license key"""
             self.assertEqual(
-                                GithubOrgClient.has_license(repo, license_key),
-                                expected
-                            )
+                GithubOrgClient.has_license(repo, license_key),
+                expected
+            )
 
 
 @parameterized_class(
