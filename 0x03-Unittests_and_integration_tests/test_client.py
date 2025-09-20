@@ -77,8 +77,10 @@ class TestGithubOrgClient(unittest.TestCase):
             """Test that the has_license static method
             returns the correct boolean value.
             """
-            client = GithubOrgClient("google")
-            self.assertEqual(client.has_license(repo, license_key), expected)
+            self.assertEqual(
+                                GithubOrgClient.has_license(repo, license_key),
+                                expected
+                            )
 
 
 @parameterized_class(
