@@ -54,8 +54,9 @@ class MessageViewSet(viewsets.ModelViewSet):
     pagination_class = MessagePagination
 
     def get_queryset(self):
-        qs = self.queryset
+        user = self.request.user
         conversation_id = self.request.query_params.get("conversation")
+        qs = Message.objects.filter(conversation__participants=user)
         if conversation_id:
             qs = qs.filter(conversation__conversation_id=conversation_id)
         return qs.order_by("sent_at")
