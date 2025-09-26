@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_filters",
     # local apps
-    "messaging_app",
     "chats",
 ]
 
@@ -53,9 +52,10 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "chats.middleware.RequestLoggingMiddleware"
 ]
 
-ROOT_URLCONF = "messaging_app.urls"
+ROOT_URLCONF = "django_middleware_03.urls"
 AUTH_USER_MODEL = "chats.User"
 
 TEMPLATES = [
@@ -74,7 +74,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "messaging_app.wsgi.application"
+WSGI_APPLICATION = "django_middleware_03.wsgi.application"
 
 
 # Database
