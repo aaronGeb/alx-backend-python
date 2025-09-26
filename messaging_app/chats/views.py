@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 
 from .permissions import IsParticipantOfConversation
 from rest_framework.permissions import IsAuthenticated
+from .pagination import MessagePagination
 
 from .models import Conversation, Message, User
 from .serializers import (
@@ -50,6 +51,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ["message_body"]
     ordering_fields = ["sent_at"]
+    pagination_class = MessagePagination
 
     def get_queryset(self):
         qs = self.queryset
