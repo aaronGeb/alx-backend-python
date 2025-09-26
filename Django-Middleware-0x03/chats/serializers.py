@@ -1,0 +1,60 @@
+from rest_framework import serializers
+from .models import Conversation, Message, User
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "user_id",
+            "first_name",
+            "last_name",
+            "email",
+            "phone_number",
+            "role",
+            "created_at",
+        ]
+
+    def get_full_name(self, obj):
+        return f"{obj.first_name} {obj.last_name}"
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    sender_name = serializers.SerializerMethodField()
+    message_body = serializers.CharField()
+
+    class Meta:
+        model = Message
+        fields = ["message_id", "sender", "sender_name", "message_body", "sent_at"]
+        read_only_fields = ["message_id", "sender", "sent_at"]
+
+    def validate_message_body(self, value):
+        if not value.strip():
+            raise serializers.ValidationError("Message body cannot be empty.")
+        if len(value) > 1000:
+            raise serializers.ValidationError(
+                "Message body exceeds maximum length of 1000 characters."
+            )
+        return value
+
+    def get_sender_full_name(self, obj):
+        return f"{obj.sender.first_name} {obj.sender.last_name}"
+
+
+class ConversationSerializer(serializers.ModelSerializer):
+    participants = UserSerializer(many=True, read_only=True)
+    messages = MessageSerializer(many=True, read_only=True)
+    participant_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Conversation
+        fields = [
+            "conversation_id",
+            "participants",
+            "participant_count",
+            "messages",
+            "created_at",
+        ]
+
+    def get_participant_count(self, obj):
+        return obj.participants.count()
