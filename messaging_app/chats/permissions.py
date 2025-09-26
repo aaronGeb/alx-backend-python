@@ -1,5 +1,6 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
+
 class IsParticipantOfConversation(BasePermission):
     """
     Custom permission to allow only participants of a conversation
