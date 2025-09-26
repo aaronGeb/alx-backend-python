@@ -35,7 +35,10 @@ class IsMessageOwner(permissions.BasePermission):
     def has_object_permission(self, request: Request, view: Any, obj: Any) -> bool:
         if not request.user or not request.user.is_authenticated:
             return False
-        return request.user in {getattr(obj, "sender", None), getattr(obj, "receiver", None)}
+        return request.user in {
+            getattr(obj, "sender", None),
+            getattr(obj, "receiver", None),
+        }
 
 
 class IsConversationParticipant(permissions.BasePermission):
