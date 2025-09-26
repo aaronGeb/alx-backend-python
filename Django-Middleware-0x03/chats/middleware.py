@@ -6,7 +6,7 @@ from django.http import HttpResponseForbidden
 
 # Configure logging
 logging.basicConfig(
-    filename="./requests.log",
+    filename="requests.log",
     level=logging.INFO,
     format="%(asctime)s - %(message)s",
 )
