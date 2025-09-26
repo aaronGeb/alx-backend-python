@@ -1,0 +1,15 @@
+2025-09-26 13:30:16,923 - User:  - Path: /api/v1/
+2025-09-26 13:16:03.251553 - User: aarongebremariam.94@gmail.com (admin) - Path: /
+2025-09-26 13:16:04.179410 - User: aarongebremariam.94@gmail.com (admin) - Path: /favicon.ico
+2025-09-26 13:16:16.333347 - User: aarongebremariam.94@gmail.com (admin) - Path: /admi/
+2025-09-26 13:17:30.124803 - User: aarongebremariam.94@gmail.com (admin) - Path: /admi/
+2025-09-26 13:18:54.041727 - User:  - Path: /api/
+Not Found: /api/
+2025-09-26 13:19:14.546889 - User:  - Path: /api/v1/
+/Users/Aaron/alx-backend-python/Django-Middleware-0x03/chats/middleware.py changed, reloading.
+2025-09-26 13:22:24,955 - User:  - Path: /api/v1/
+2025-09-26 13:24:18,376 - /Users/Aaron/alx-backend-python/Django-Middleware-0x03/chats/middleware.py changed, reloading.
+2025-09-26 13:25:11,730 - /Users/Aaron/alx-backend-python/Django-Middleware-0x03/chats/middleware.py changed, reloading.
+2025-09-26 13:26:18,779 - User:  - Path: /api/v1/
+2025-09-26 13:26:50,477 - User:  - Path: /api-auth/
+2025-09-26 13:26:50,499 - Not Found: /api-auth/
